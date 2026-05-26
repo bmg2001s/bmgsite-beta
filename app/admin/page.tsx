@@ -286,7 +286,16 @@ export default function AdminPage() {
                 <th>Location</th>
                 <th>ISP / Network</th>
                 <th>Timezone</th>
-                <th>Device</th>
+                <th>Device Type</th>
+                <th>Device Model</th>
+                <th>GPU</th>
+                <th>Language</th>
+                <th>Resolution</th>
+                <th>Battery</th>
+                <th>Platform</th>
+                <th>Touch</th>
+                <th>Incognito</th>
+                <th>VPN / Proxy</th>
                 <th>Browser</th>
                 <th>OS</th>
                 <th>Action</th>
@@ -296,7 +305,7 @@ export default function AdminPage() {
               {filtered.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={14}
+                    colSpan={24}
                     style={{
                       textAlign: 'center',
                       padding: '40px',
@@ -336,6 +345,15 @@ export default function AdminPage() {
                     <td title={u.isp || ''}>{u.isp || '—'}</td>
                     <td>{u.timezone || '—'}</td>
                     <td style={{ textTransform: 'capitalize' }}>{u.device || '—'}</td>
+                    <td>{u.device_model || '—'}</td>
+                    <td title={u.gpu || ''}>{u.gpu ? (u.gpu.length > 20 ? u.gpu.substring(0, 20) + '...' : u.gpu) : '—'}</td>
+                    <td>{u.language || '—'}</td>
+                    <td>{u.screen_resolution || '—'}</td>
+                    <td>{u.battery_level || '—'}</td>
+                    <td>{u.platform || '—'}</td>
+                    <td>{u.touch_support ? 'Yes' : 'No'}</td>
+                    <td>{u.incognito === true ? 'Yes' : u.incognito === false ? 'No' : '—'}</td>
+                    <td>{u.vpn_proxy === true ? 'Yes' : u.vpn_proxy === false ? 'No' : '—'}</td>
                     <td>{u.browser || '—'}</td>
                     <td>{u.os || '—'}</td>
                     <td>
@@ -356,7 +374,7 @@ export default function AdminPage() {
                     {/* EXPANDED DETAILS */}
                     {expandedId === u.id && (
                       <tr style={{ background: 'rgba(26,184,160,0.02)' }}>
-                        <td colSpan={14} style={{ padding: '20px' }}>
+                        <td colSpan={24} style={{ padding: '20px' }}>
                           <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',

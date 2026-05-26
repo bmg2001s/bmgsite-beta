@@ -20,6 +20,7 @@ interface UserRow {
   browser: string | null
   os: string | null
   device: string | null
+  user_agent: string | null
   last_active: string | null
 }
 
@@ -39,6 +40,7 @@ export default function AdminPage() {
   const [users, setUsers] = useState<UserRow[]>([])
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
+  const [expandedId, setExpandedId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [adminEmail, setAdminEmail] = useState<string | null>(null)
@@ -254,9 +256,15 @@ export default function AdminPage() {
                 </tr>
               ) : (
                 filtered.map((u, i) => (
-                  <tr key={u.id}>
-                    <td style={{ color: 'rgba(240,235,224,0.3)' }}>{i + 1}</td>
-                    <td title={u.email} style={{ color: 'var(--cream)' }}>{u.email}</td>
+                  <React.Fragment key={u.id}>
+                    <tr 
+                      style={{ cursor: 'pointer', background: expandedId === u.id ? 'rgba(26,184,160,0.05)' : 'transparent' }}
+                      onClick={() => setExpandedId(expandedId === u.id ? null : u.id)}
+                    >
+                      <td style={{ color: 'rgba(240,235,224,0.3)' }}>
+                        {expandedId === u.id ? '▼' : '▶'}
+                      </td>
+                      <td title={u.email} style={{ color: 'var(--cream)' }}>{u.email}</td>
                     <td>
                       {u.pubg_id
                         ? <span className="pubg-badge">{u.pubg_id}</span>
@@ -279,16 +287,79 @@ export default function AdminPage() {
                     <td>{u.browser || '—'}</td>
                     <td>{u.os || '—'}</td>
                     <td>
-                      <button
-                        className="delete-btn"
-                        id={`delete-user-${u.id}`}
-                        onClick={() => handleDelete(u.id, u.email)}
-                        disabled={deleting === u.id}
-                      >
-                        {deleting === u.id ? '...' : 'Delete'}
-                      </button>
-                    </td>
-                  </tr>
+                        <button
+                          className="delete-btn"
+                          id={`delete-user-${u.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleDelete(u.id, u.email)
+                          }}
+                          disabled={deleting === u.id}
+                        >
+                          {deleting === u.id ? '...' : 'Delete'}
+                        </button>
+                      </td>
+                    </tr>
+
+                    {/* EXPANDED DETAILS */}
+                    {expandedId === u.id && (
+                      <tr style={{ background: 'rgba(26,184,160,0.02)' }}>
+                        <td colSpan={14} style={{ padding: '20px' }}>
+                          <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                            gap: '20px',
+                            background: 'rgba(0,0,0,0.4)',
+                            border: '1px solid rgba(240,235,224,0.1)',
+                            borderRadius: '8px',
+                            padding: '20px',
+                          }}>
+                            {/* Column 1 */}
+                            <div>
+                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Core Identity</div>
+                              <div style={{ marginBottom: '8px' }}><strong>ID:</strong> <span style={{ fontFamily: 'monospace', color: 'rgba(240,235,224,0.6)' }}>{u.id}</span></div>
+                              <div style={{ marginBottom: '8px' }}><strong>Email:</strong> {u.email}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>PUBG ID:</strong> <span style={{ color: 'var(--amber)' }}>{u.pubg_id || 'Not Set'}</span></div>
+                            </div>
+                            
+                            {/* Column 2 */}
+                            <div>
+                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Location & Network</div>
+                              <div style={{ marginBottom: '8px' }}><strong>IP:</strong> {u.ip_address || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>City/Country:</strong> {u.city || '—'}, {u.country || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>ISP:</strong> {u.isp || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Timezone:</strong> {u.timezone || '—'}</div>
+                            </div>
+
+                            {/* Column 3 */}
+                            <div>
+                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>System & Timestamps</div>
+                              <div style={{ marginBottom: '8px' }}><strong>OS / Browser:</strong> {u.os || '—'} / {u.browser || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Device Type:</strong> {u.device || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>First Seen:</strong> {fmt(u.created_at)}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Last Active:</strong> {fmt(u.last_active)}</div>
+                            </div>
+                            
+                            {/* Full Width Row */}
+                            <div style={{ gridColumn: '1 / -1' }}>
+                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Raw User Agent</div>
+                              <div style={{ 
+                                fontFamily: 'monospace', 
+                                fontSize: '11px', 
+                                background: 'rgba(0,0,0,0.6)', 
+                                padding: '8px', 
+                                borderRadius: '4px',
+                                color: 'rgba(240,235,224,0.5)',
+                                wordBreak: 'break-all'
+                              }}>
+                                {u.user_agent || 'No user agent recorded'}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 ))
               )}
             </tbody>

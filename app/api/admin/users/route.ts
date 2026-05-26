@@ -62,6 +62,7 @@ export async function GET(req: NextRequest) {
     browser:     sessionMap[u.id]?.browser ?? null,
     os:          sessionMap[u.id]?.os ?? null,
     device:      sessionMap[u.id]?.device ?? null,
+    user_agent:  sessionMap[u.id]?.user_agent ?? null,
     last_active: sessionMap[u.id]?.last_active ?? null,
   }))
 

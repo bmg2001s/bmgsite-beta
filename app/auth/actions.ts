@@ -57,12 +57,27 @@ export async function signOut() {
 export async function updatePubgId(userId: string, pubgId: string) {
   const supabase = await createClient()
 
-  const { error } = await supabase
-    .from('profiles')
-    .upsert({ id: userId, pubg_id: pubgId, updated_at: new Date().toISOString() })
+  // Verify the user is updating their own ID
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user || user.id !== userId) {
+    return { error: 'Unauthorized to update this profile.' }
+  }
 
-  if (error) {
-    return { error: error.message }
+  // First try to update
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ pubg_id: pubgId, updated_at: new Date().toISOString() })
+    .eq('id', userId)
+
+  if (updateError) {
+    // If update fails (e.g., row doesn't exist), try insert
+    const { error: insertError } = await supabase
+      .from('profiles')
+      .insert({ id: userId, pubg_id: pubgId, updated_at: new Date().toISOString() })
+    
+    if (insertError) {
+      return { error: insertError.message }
+    }
   }
 
   revalidatePath('/dashboard')

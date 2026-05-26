@@ -27,6 +27,11 @@ export async function DELETE(req: NextRequest) {
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
 
+  // Manually delete child records first to prevent foreign key constraint errors
+  // in case the database tables were created without ON DELETE CASCADE
+  await adminClient.from('profiles').delete().eq('id', userId)
+  await adminClient.from('user_sessions').delete().eq('user_id', userId)
+
   const { error } = await adminClient.auth.admin.deleteUser(userId)
 
   if (error) {

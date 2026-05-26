@@ -386,7 +386,7 @@ export default function AdminPage() {
                             wordBreak: 'break-word',
                           }}>
                             {/* Column 1 */}
-                            <div>
+                            <div style={{ minWidth: 0 }}>
                               <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Core Identity</div>
                               <div style={{ marginBottom: '8px' }}><strong>ID:</strong> <span style={{ fontFamily: 'monospace', color: 'rgba(240,235,224,0.6)' }}>{u.id}</span></div>
                               <div style={{ marginBottom: '8px' }}><strong>Email:</strong> {u.email}</div>
@@ -396,7 +396,7 @@ export default function AdminPage() {
                             </div>
                             
                             {/* Column 2 */}
-                            <div>
+                            <div style={{ minWidth: 0 }}>
                               <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Location & Network</div>
                               <div style={{ marginBottom: '8px' }}><strong>IP:</strong> {u.ip_address || '—'}</div>
                               <div style={{ marginBottom: '8px' }}><strong>City/Country:</strong> {u.city || '—'}, {u.country || '—'}</div>
@@ -410,7 +410,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Column 3 */}
-                            <div>
+                            <div style={{ minWidth: 0 }}>
                               <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>System & Hardware</div>
                               <div style={{ marginBottom: '8px' }}><strong>Device:</strong> {u.device_model || u.device || 'Desktop'}</div>
                               <div style={{ marginBottom: '8px' }}><strong>OS/Platform:</strong> {u.os || '—'} / {u.platform || '—'}</div>
@@ -420,7 +420,7 @@ export default function AdminPage() {
                             </div>
 
                             {/* Column 4 */}
-                            <div>
+                            <div style={{ minWidth: 0 }}>
                               <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Browser Settings</div>
                               <div style={{ marginBottom: '8px' }}><strong>Browser:</strong> {u.browser || '—'}</div>
                               <div style={{ marginBottom: '8px' }}><strong>Language:</strong> {u.language || '—'}</div>

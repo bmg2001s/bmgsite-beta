@@ -1,65 +1,320 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
+import { signIn, signUp } from '@/app/auth/actions'
+import type { User } from '@supabase/supabase-js'
+
+type Tab = 'login' | 'register'
+
+export default function HomePage() {
+  const [tab, setTab] = useState<Tab>('login')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
+  const router = useRouter()
+  const supabase = createClient()
+  const tracked = useRef(false)
+
+  // Check current auth state
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user)
+      setCheckingAuth(false)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  // Track user on login
+  const trackUser = async (userId: string) => {
+    if (tracked.current) return
+    tracked.current = true
+    try {
+      await fetch('/api/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      })
+    } catch { /* silent */ }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setMessage(null)
+
+    if (!email || !password) {
+      setMessage({ type: 'error', text: 'Email and password are required.' })
+      setLoading(false)
+      return
+    }
+
+    const result = tab === 'login'
+      ? await signIn(email, password)
+      : await signUp(email, password)
+
+    if (result.error) {
+      setMessage({ type: 'error', text: result.error })
+      setLoading(false)
+      return
+    }
+
+    if (result.user) {
+      await trackUser(result.user.id)
+      setMessage({
+        type: 'success',
+        text: tab === 'login' ? 'Welcome back! Redirecting...' : 'Account created! Redirecting...',
+      })
+      setTimeout(() => router.push('/dashboard'), 800)
+    }
+
+    setLoading(false)
+  }
+
+  const handleSignOut = async () => {
+    tracked.current = false
+    await supabase.auth.signOut()
+    setUser(null)
+  }
+
+  const switchTab = (t: Tab) => {
+    setTab(t)
+    setMessage(null)
+    setEmail('')
+    setPassword('')
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="stage">
+      <div className="stage-inner">
+
+        {/* ── HEADER ── */}
+        <div className="header">
+          <h1 className="headline">
+            <span className="word-a">BMG</span><span className="arrow-wrap">
+              <span className="arrow-left">←</span>
+              <span className="arrow-right">→</span>
+            </span><span className="word-b">CLAN</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+          <div className="kicker">Elite PUBG Squad · Est. 2024 · No Mercy</div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* ── MARQUEE TRACKS ── */}
+        <div className="tracks">
+
+          {/* Track A → scrolls LEFT ← */}
+          <div className="track">
+            <div className="track-inner track-inner-a">
+              <div className="item"><span className="item-arrow">←</span><span className="word">Squad</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Victory</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Drop Zone</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Sniper</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Clutch</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Ranked</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Conqueror</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Chicken</span><span className="item-sep"></span></div>
+              {/* Duplicate for seamless loop */}
+              <div className="item"><span className="item-arrow">←</span><span className="word">Squad</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Victory</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Drop Zone</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Sniper</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Clutch</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Ranked</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Conqueror</span><span className="item-sep"></span></div>
+              <div className="item"><span className="item-arrow">←</span><span className="word">Chicken</span><span className="item-sep"></span></div>
+            </div>
+          </div>
+
+          {/* Track B → scrolls RIGHT → (opposite) */}
+          <div className="track">
+            <div className="track-inner track-inner-b">
+              <div className="item"><span className="word">Eliminate</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Headshot</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Rush</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Dominate</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">No Mercy</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Pro</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Ace</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Legend</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              {/* Duplicate */}
+              <div className="item"><span className="word">Eliminate</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Headshot</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Rush</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Dominate</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">No Mercy</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Pro</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Ace</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+              <div className="item"><span className="word">Legend</span><span className="item-arrow">→</span><span className="item-sep"></span></div>
+            </div>
+          </div>
+
         </div>
-      </main>
+
+        {/* ── ORBITS ── */}
+        <div className="orbits-section">
+
+          <div className="orbit-wrap">
+            <div className="orbit">
+              <div className="ring-outer"></div>
+              <div className="ring-inner"></div>
+              <div className="ring-core"></div>
+            </div>
+            <div className="orbit-label">
+              <strong>CW ↻</strong>
+              outer ring
+            </div>
+          </div>
+
+          <div className="orbit-div"><span>vs</span></div>
+
+          <div className="orbit-wrap">
+            <div className="orbit">
+              <div className="ring-outer"></div>
+              <div className="ring-inner"></div>
+              <div className="ring-core"></div>
+            </div>
+            <div className="orbit-label">
+              <strong>CCW ↺</strong>
+              outer ring
+            </div>
+          </div>
+
+          <div className="orbit-div"><span>vs</span></div>
+
+          <div className="orbit-wrap">
+            <div className="orbit">
+              <div className="ring-outer"></div>
+              <div className="ring-inner"></div>
+              <div className="ring-core"></div>
+            </div>
+            <div className="orbit-label">
+              <strong>CW ↻</strong>
+              outer ring
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── FOOTER CREDIT ── */}
+        <div className="footer-info">
+          <span>BMG Clan</span>
+          <span className="sep">·</span>
+          <span>Elite PUBG</span>
+          <span className="sep">·</span>
+          <span>Est. 2024</span>
+        </div>
+
+        {/* ══════════════════════════════════
+            AUTH PANEL — bottom of page
+        ══════════════════════════════════ */}
+        <div className="auth-section">
+          <div className="auth-panel">
+
+            {checkingAuth ? (
+              <div style={{ textAlign: 'center', padding: '8px 0' }}>
+                <span className="auth-label" style={{ color: 'rgba(240,235,224,0.2)' }}>
+                  Checking session...
+                </span>
+              </div>
+            ) : user ? (
+              /* ── LOGGED IN STATE ── */
+              <div className="auth-logged-in">
+                <p>✓ Signed in as</p>
+                <p className="user-email">{user.email}</p>
+                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  <Link href="/dashboard" className="auth-link-btn">
+                    My Dashboard →
+                  </Link>
+                </div>
+                <button className="auth-signout-btn" onClick={handleSignOut}>
+                  Sign out
+                </button>
+              </div>
+            ) : (
+              /* ── LOGIN / REGISTER FORM ── */
+              <>
+                <div className="auth-tabs">
+                  <button
+                    id="auth-tab-login"
+                    className={`auth-tab${tab === 'login' ? ' active' : ''}`}
+                    onClick={() => switchTab('login')}
+                    type="button"
+                  >
+                    Login
+                  </button>
+                  <button
+                    id="auth-tab-register"
+                    className={`auth-tab${tab === 'register' ? ' active' : ''}`}
+                    onClick={() => switchTab('register')}
+                    type="button"
+                  >
+                    Register
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <div>
+                    <label className="auth-label" htmlFor="auth-email">Email</label>
+                    <input
+                      id="auth-email"
+                      className="auth-input"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      autoComplete="email"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="auth-label" htmlFor="auth-password">Password</label>
+                    <input
+                      id="auth-password"
+                      className="auth-input"
+                      type="password"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
+                      required
+                      minLength={6}
+                    />
+                  </div>
+
+                  {message && (
+                    <div className={`auth-msg ${message.type}`}>
+                      {message.text}
+                    </div>
+                  )}
+
+                  <button
+                    id="auth-submit-btn"
+                    className="auth-btn"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading
+                      ? '...'
+                      : tab === 'login' ? 'Login →' : 'Create Account →'}
+                  </button>
+                </form>
+              </>
+            )}
+
+          </div>
+        </div>
+
+      </div>
     </div>
-  );
+  )
 }

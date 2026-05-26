@@ -264,7 +264,7 @@ export default function DashboardPage() {
               color: 'rgba(240,235,224,0.15)',
             }}
           >
-            BMG Clan © 2024
+            BMG Clan © 2026
           </div>
         </div>
 

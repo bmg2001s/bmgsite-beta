@@ -79,9 +79,9 @@ export default function HomePage() {
       })
       setTimeout(() => {
         if (result.user?.email === 'admin@bmgclan.com') {
-          router.push('/admin')
+          window.location.href = '/admin'
         } else {
-          router.push('/dashboard')
+          window.location.href = '/dashboard'
         }
       }, 800)
     }

@@ -15,19 +15,28 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- Stores tracking data: IP, location, browser, etc.
 -- Uses user_id as unique — one row per user, always updated
 CREATE TABLE IF NOT EXISTS user_sessions (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id     UUID UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
-  ip_address  TEXT,
-  city        TEXT,
-  country     TEXT,
-  isp         TEXT,
-  timezone    TEXT,
-  browser     TEXT,
-  os          TEXT,
-  device      TEXT,
-  user_agent  TEXT,
-  last_active TIMESTAMPTZ DEFAULT now(),
-  created_at  TIMESTAMPTZ DEFAULT now()
+  id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id           UUID UNIQUE REFERENCES auth.users(id) ON DELETE CASCADE,
+  ip_address        TEXT,
+  city              TEXT,
+  country           TEXT,
+  isp               TEXT,
+  timezone          TEXT,
+  browser           TEXT,
+  os                TEXT,
+  device            TEXT,
+  device_model      TEXT,
+  gpu               TEXT,
+  language          TEXT,
+  screen_resolution TEXT,
+  battery_level     TEXT,
+  platform          TEXT,
+  touch_support     BOOLEAN,
+  incognito         BOOLEAN,
+  vpn_proxy         BOOLEAN,
+  user_agent        TEXT,
+  last_active       TIMESTAMPTZ DEFAULT now(),
+  created_at        TIMESTAMPTZ DEFAULT now()
 );
 
 -- ── 3. ROW LEVEL SECURITY ──────────────────────────────────

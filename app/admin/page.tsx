@@ -374,7 +374,7 @@ export default function AdminPage() {
                     {/* EXPANDED DETAILS */}
                     {expandedId === u.id && (
                       <tr style={{ background: 'rgba(26,184,160,0.02)' }}>
-                        <td colSpan={24} style={{ padding: '20px' }}>
+                        <td colSpan={24} style={{ padding: '20px', whiteSpace: 'normal' }}>
                           <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',

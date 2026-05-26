@@ -53,6 +53,7 @@ export default function AdminPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [adminEmail, setAdminEmail] = useState<string | null>(null)
+  const [showDictionary, setShowDictionary] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -156,6 +157,13 @@ export default function AdminPage() {
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
           <button
             className="auth-btn"
+            onClick={() => setShowDictionary(!showDictionary)}
+            style={{ width: 'auto', padding: '8px 16px', background: showDictionary ? 'var(--teal)' : 'rgba(240,235,224,0.05)', color: showDictionary ? '#000' : 'var(--cream)' }}
+          >
+            {showDictionary ? 'Hide Dictionary' : 'Data Dictionary'}
+          </button>
+          <button
+            className="auth-btn"
             onClick={loadData}
             style={{ width: 'auto', padding: '8px 16px' }}
           >
@@ -190,6 +198,41 @@ export default function AdminPage() {
           Shown
         </div>
       </div>
+
+      {/* ── DATA DICTIONARY ── */}
+      {showDictionary && (
+        <div style={{
+          background: 'rgba(0,0,0,0.3)',
+          border: '1px solid rgba(240,235,224,0.1)',
+          borderRadius: '8px',
+          padding: '20px',
+          marginBottom: '20px'
+        }}>
+          <h2 style={{ fontSize: '14px', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
+            Tracking Data Dictionary
+          </h2>
+          <div style={{ display: 'grid', gap: '12px', fontSize: '13px' }}>
+            {[
+              { field: 'Device Type', desc: 'Classifies the hardware type (e.g., Mobile, Desktop, Tablet).' },
+              { field: 'Device Model / Brand', desc: 'The manufacturer name or model number if exposed by the browser (e.g., iPhone, Samsung Galaxy).' },
+              { field: 'GPU / Graphics Card', desc: 'The model of the graphics processor inside the device (e.g., Apple GPU, Intel Iris Xe).' },
+              { field: 'Language', desc: "The primary language configuration of the user's system or browser (e.g., en-US)." },
+              { field: 'Screen Resolution', desc: 'The width and height of the display in pixels.' },
+              { field: 'Local Time / Timezone', desc: "The local time set on the user's device, revealing their actual timezone." },
+              { field: 'Battery Level', desc: "The device's current battery percentage and whether it is plugged into power." },
+              { field: 'Platform / Architecture', desc: 'The underlying platform string (e.g., Win32, Linux x86_64).' },
+              { field: 'Touch Support', desc: 'Flags whether the screen supports touch capabilities (Yes/No).' },
+              { field: 'Incognito / Private Mode', desc: 'Flags whether the user opened the link inside a private browsing session.' },
+              { field: 'VPN / Proxy Detection', desc: 'An automated check flagging whether the IP matches known commercial VPNs or hosting centers.' },
+            ].map((item, idx) => (
+              <div key={idx} style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '16px', borderBottom: '1px solid rgba(240,235,224,0.05)', paddingBottom: '12px' }}>
+                <strong style={{ color: 'var(--cream)' }}>{item.field}</strong>
+                <span style={{ color: 'rgba(240,235,224,0.6)' }}>{item.desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ── SEARCH ── */}
       <div>

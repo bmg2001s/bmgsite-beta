@@ -114,7 +114,23 @@ export default function HomePage() {
               <span className="arrow-right">→</span>
             </span><span className="word-b">CLAN</span>
           </h1>
-          <div className="kicker">Elite PUBG Squad · Est. 2024 · No Mercy</div>
+          <div className="kicker">Elite PUBG Squad · Est. 2026 · No Mercy</div>
+          
+          {/* Fake Stats / Features to make UI look better */}
+          <div style={{ display: 'flex', gap: '40px', justifyContent: 'center', marginTop: '30px', fontSize: '12px', color: 'rgba(240,235,224,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ color: 'var(--amber)', fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>50+</span>
+              Active Members
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ color: 'var(--teal)', fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>Daily</span>
+              Custom Rooms
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <span style={{ color: 'var(--rose)', fontSize: '28px', fontWeight: 'bold', marginBottom: '4px' }}>T1</span>
+              Competitive Roster
+            </div>
+          </div>
         </div>
 
         {/* ── MARQUEE TRACKS ── */}
@@ -213,13 +229,41 @@ export default function HomePage() {
 
         </div>
 
+        {/* ── SOCIALS ── */}
+        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', marginTop: '40px', marginBottom: '20px', flexWrap: 'wrap' }}>
+          <a href="https://discord.gg/TWTqgHgXgB" target="_blank" rel="noopener noreferrer" style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            background: 'rgba(88, 101, 242, 0.1)', border: '1px solid #5865F2', 
+            color: '#5865F2', padding: '12px 24px', borderRadius: '6px',
+            textDecoration: 'none', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em',
+            transition: 'all 0.2s ease', cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#5865F2'; e.currentTarget.style.color = '#fff' }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(88, 101, 242, 0.1)'; e.currentTarget.style.color = '#5865F2' }}
+          >
+            Join Discord
+          </a>
+          <a href="https://www.youtube.com/@brownmundegaming." target="_blank" rel="noopener noreferrer" style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            background: 'rgba(255, 0, 0, 0.1)', border: '1px solid #FF0000', 
+            color: '#FF0000', padding: '12px 24px', borderRadius: '6px',
+            textDecoration: 'none', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em',
+            transition: 'all 0.2s ease', cursor: 'pointer'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#FF0000'; e.currentTarget.style.color = '#fff' }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 0, 0, 0.1)'; e.currentTarget.style.color = '#FF0000' }}
+          >
+            Watch YouTube
+          </a>
+        </div>
+
         {/* ── FOOTER CREDIT ── */}
         <div className="footer-info">
           <span>BMG Clan</span>
           <span className="sep">·</span>
           <span>Elite PUBG</span>
           <span className="sep">·</span>
-          <span>Est. 2024</span>
+          <span>Est. 2026</span>
         </div>
 
         {/* ══════════════════════════════════

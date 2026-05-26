@@ -103,7 +103,7 @@ export default function HomePage() {
   }
 
   return (
-    <>
+    <div className="stage">
       {/* ── BACKGROUND VIDEO ── */}
       <video
         autoPlay
@@ -123,8 +123,6 @@ export default function HomePage() {
       >
         <source src="/pubg-trailer.mp4" type="video/mp4" />
       </video>
-
-      <div className="stage">
       <div className="stage-inner">
 
         {/* ── HEADER ── */}
@@ -396,6 +394,5 @@ export default function HomePage() {
 
       </div>
     </div>
-    </>
   )
 }

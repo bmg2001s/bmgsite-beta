@@ -19,6 +19,12 @@ export const metadata: Metadata = {
       }
     ],
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'BMG Clan — Elite PUBG Squad',
+    description: 'Join the elite. Submit your PUBG ID and battle with the best.',
+    images: ['/og-image.png'],
+  },
 }
 
 export default function RootLayout({

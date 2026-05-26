@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bmgsite-beta.vercel.app'),
   title: 'BMG Clan — Elite PUBG Squad',
   description: 'Official website of BMG Clan — Elite PUBG gaming squad. Join us, submit your PUBG ID and compete at the highest level.',
   keywords: ['BMG Clan', 'PUBG', 'gaming clan', 'esports', 'PUBG squad'],
@@ -9,6 +10,14 @@ export const metadata: Metadata = {
     title: 'BMG Clan — Elite PUBG Squad',
     description: 'Join the elite. Submit your PUBG ID and battle with the best.',
     type: 'website',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'BMG Clan PUBG Squad',
+      }
+    ],
   },
 }
 

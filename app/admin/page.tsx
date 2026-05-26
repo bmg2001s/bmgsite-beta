@@ -378,7 +378,7 @@ export default function AdminPage() {
                           <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                            gap: '20px',
+                            gap: '60px',
                             background: 'rgba(0,0,0,0.4)',
                             border: '1px solid rgba(240,235,224,0.1)',
                             borderRadius: '8px',

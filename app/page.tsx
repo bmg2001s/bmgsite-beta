@@ -124,7 +124,7 @@ export default function HomePage() {
               playsInline
               style="width: 100%; height: 100%; object-fit: cover;"
             >
-              <source src="/pubg-trailer.mp4" type="video/mp4" />
+              <source src="https://ycppmmieeulpbbqmppov.supabase.co/storage/v1/object/public/media/pubg-trailer.mp4" type="video/mp4" />
             </video>
           `
         }}

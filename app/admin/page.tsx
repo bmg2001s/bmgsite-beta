@@ -383,6 +383,7 @@ export default function AdminPage() {
                             border: '1px solid rgba(240,235,224,0.1)',
                             borderRadius: '8px',
                             padding: '20px',
+                            wordBreak: 'break-word',
                           }}>
                             {/* Column 1 */}
                             <div>

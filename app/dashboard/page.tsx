@@ -161,6 +161,14 @@ export default function DashboardPage() {
           >
             {user?.email}
           </div>
+
+          {user?.email === 'admin@bmgclan.com' && (
+            <div style={{ marginTop: '12px' }}>
+              <Link href="/admin" className="auth-btn" style={{ textDecoration: 'none', textAlign: 'center', display: 'block' }}>
+                Go to Admin Dashboard →
+              </Link>
+            </div>
+          )}
         </div>
 
         <div className="dashboard-divider" />

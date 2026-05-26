@@ -75,7 +75,13 @@ export default function HomePage() {
         type: 'success',
         text: tab === 'login' ? 'Welcome back! Redirecting...' : 'Account created! Redirecting...',
       })
-      setTimeout(() => router.push('/dashboard'), 800)
+      setTimeout(() => {
+        if (result.user?.email === 'admin@bmgclan.com') {
+          router.push('/admin')
+        } else {
+          router.push('/dashboard')
+        }
+      }, 800)
     }
 
     setLoading(false)
@@ -232,8 +238,8 @@ export default function HomePage() {
                 <p>✓ Signed in as</p>
                 <p className="user-email">{user.email}</p>
                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <Link href="/dashboard" className="auth-link-btn">
-                    My Dashboard →
+                  <Link href={user.email === 'admin@bmgclan.com' ? '/admin' : '/dashboard'} className="auth-link-btn">
+                    {user.email === 'admin@bmgclan.com' ? 'Admin Dashboard →' : 'My Dashboard →'}
                   </Link>
                 </div>
                 <button className="auth-signout-btn" onClick={handleSignOut}>

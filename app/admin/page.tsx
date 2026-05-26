@@ -21,6 +21,15 @@ interface UserRow {
   os: string | null
   device: string | null
   user_agent: string | null
+  device_model: string | null
+  gpu: string | null
+  language: string | null
+  screen_resolution: string | null
+  battery_level: string | null
+  platform: string | null
+  touch_support: boolean | null
+  incognito: boolean | null
+  vpn_proxy: boolean | null
   last_active: string | null
 }
 
@@ -320,6 +329,8 @@ export default function AdminPage() {
                               <div style={{ marginBottom: '8px' }}><strong>ID:</strong> <span style={{ fontFamily: 'monospace', color: 'rgba(240,235,224,0.6)' }}>{u.id}</span></div>
                               <div style={{ marginBottom: '8px' }}><strong>Email:</strong> {u.email}</div>
                               <div style={{ marginBottom: '8px' }}><strong>PUBG ID:</strong> <span style={{ color: 'var(--amber)' }}>{u.pubg_id || 'Not Set'}</span></div>
+                              <div style={{ marginBottom: '8px' }}><strong>First Seen:</strong> {fmt(u.created_at)}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Last Active:</strong> {fmt(u.last_active)}</div>
                             </div>
                             
                             {/* Column 2 */}
@@ -329,15 +340,34 @@ export default function AdminPage() {
                               <div style={{ marginBottom: '8px' }}><strong>City/Country:</strong> {u.city || '—'}, {u.country || '—'}</div>
                               <div style={{ marginBottom: '8px' }}><strong>ISP:</strong> {u.isp || '—'}</div>
                               <div style={{ marginBottom: '8px' }}><strong>Timezone:</strong> {u.timezone || '—'}</div>
+                              <div style={{ marginBottom: '8px', display: 'flex', gap: '8px' }}>
+                                <strong>VPN/Proxy:</strong> 
+                                {u.vpn_proxy === true ? <span style={{ color: 'var(--rose)', fontWeight: 'bold' }}>Detected</span> : 
+                                 u.vpn_proxy === false ? <span style={{ color: 'var(--teal)' }}>Clean</span> : '—'}
+                              </div>
                             </div>
 
                             {/* Column 3 */}
                             <div>
-                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>System & Timestamps</div>
-                              <div style={{ marginBottom: '8px' }}><strong>OS / Browser:</strong> {u.os || '—'} / {u.browser || '—'}</div>
-                              <div style={{ marginBottom: '8px' }}><strong>Device Type:</strong> {u.device || '—'}</div>
-                              <div style={{ marginBottom: '8px' }}><strong>First Seen:</strong> {fmt(u.created_at)}</div>
-                              <div style={{ marginBottom: '8px' }}><strong>Last Active:</strong> {fmt(u.last_active)}</div>
+                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>System & Hardware</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Device:</strong> {u.device_model || u.device || 'Desktop'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>OS/Platform:</strong> {u.os || '—'} / {u.platform || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>GPU:</strong> {u.gpu || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Resolution:</strong> {u.screen_resolution || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Battery:</strong> {u.battery_level || '—'}</div>
+                            </div>
+
+                            {/* Column 4 */}
+                            <div>
+                              <div style={{ color: 'var(--teal)', fontSize: '10px', textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.1em' }}>Browser Settings</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Browser:</strong> {u.browser || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Language:</strong> {u.language || '—'}</div>
+                              <div style={{ marginBottom: '8px' }}><strong>Touch Screen:</strong> {u.touch_support ? 'Yes' : 'No'}</div>
+                              <div style={{ marginBottom: '8px', display: 'flex', gap: '8px' }}>
+                                <strong>Incognito:</strong>
+                                {u.incognito === true ? <span style={{ color: 'var(--amber)' }}>Suspected</span> :
+                                 u.incognito === false ? <span style={{ color: 'var(--teal)' }}>Normal</span> : '—'}
+                              </div>
                             </div>
                             
                             {/* Full Width Row */}

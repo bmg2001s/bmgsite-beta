@@ -63,6 +63,15 @@ export async function GET(req: NextRequest) {
     os:          sessionMap[u.id]?.os ?? null,
     device:      sessionMap[u.id]?.device ?? null,
     user_agent:  sessionMap[u.id]?.user_agent ?? null,
+    device_model:sessionMap[u.id]?.device_model ?? null,
+    gpu:         sessionMap[u.id]?.gpu ?? null,
+    language:    sessionMap[u.id]?.language ?? null,
+    screen_resolution: sessionMap[u.id]?.screen_resolution ?? null,
+    battery_level: sessionMap[u.id]?.battery_level ?? null,
+    platform:    sessionMap[u.id]?.platform ?? null,
+    touch_support: sessionMap[u.id]?.touch_support ?? null,
+    incognito:   sessionMap[u.id]?.incognito ?? null,
+    vpn_proxy:   sessionMap[u.id]?.vpn_proxy ?? null,
     last_active: sessionMap[u.id]?.last_active ?? null,
   }))
 

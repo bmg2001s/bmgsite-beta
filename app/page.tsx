@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { signIn, signUp } from '@/app/auth/actions'
+import { collectClientData } from '@/lib/analytics'
 import type { User } from '@supabase/supabase-js'
 
 type Tab = 'login' | 'register'
@@ -40,10 +41,11 @@ export default function HomePage() {
     if (tracked.current) return
     tracked.current = true
     try {
+      const analytics = await collectClientData()
       await fetch('/api/track', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId, ...analytics }),
       })
     } catch { /* silent */ }
   }

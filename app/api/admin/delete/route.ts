@@ -10,7 +10,8 @@ export async function DELETE(req: NextRequest) {
   const supabaseUser = await createServerClient()
   const { data: { user } } = await supabaseUser.auth.getUser()
 
-  if (!user || user.email !== process.env.ADMIN_EMAIL) {
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@bmgclan.com'
+  if (!user || user.email !== adminEmail) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 403 })
   }
 

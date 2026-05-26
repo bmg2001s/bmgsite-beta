@@ -111,7 +111,7 @@ export default function HomePage() {
           inset: 0,
           width: '100vw',
           height: '100vh',
-          zIndex: -1,
+          zIndex: 0,
           opacity: 0.25,
           pointerEvents: 'none',
         }}
@@ -129,7 +129,7 @@ export default function HomePage() {
           `
         }}
       />
-      <div className="stage-inner">
+      <div className="stage-inner" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* ── HEADER ── */}
         <div className="header">
